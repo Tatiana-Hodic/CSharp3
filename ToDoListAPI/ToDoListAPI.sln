@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4CED6F23-2F84-4C4F-ACB1-B3A0ACA98BF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoList.WebApi", "src\ToDoList.WebApi\ToDoList.WebApi.csproj", "{C5661F21-6E97-4C83-AB07-FE3F492D937B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C5661F21-6E97-4C83-AB07-FE3F492D937B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5661F21-6E97-4C83-AB07-FE3F492D937B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5661F21-6E97-4C83-AB07-FE3F492D937B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5661F21-6E97-4C83-AB07-FE3F492D937B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C5661F21-6E97-4C83-AB07-FE3F492D937B} = {4CED6F23-2F84-4C4F-ACB1-B3A0ACA98BF0}
+	EndGlobalSection
+EndGlobal
