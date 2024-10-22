@@ -1,4 +1,6 @@
 namespace ToDoList.WebApi.Controllers;
+
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
@@ -18,11 +20,14 @@ public class ToDoItemsController : ControllerBase
         //try to create an item
         try
         {
+            //setting id, usually done by database itself
             item.ToDoItemId = items.Count == 0 ? 1 : items.Max(o => o.ToDoItemId) + 1;
+            //adding to List by method Add
             items.Add(item);
         }
         catch (Exception ex)
         {
+            //error caught using Exception
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
         }
 
@@ -36,13 +41,16 @@ public class ToDoItemsController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<ToDoItemGetResponseDto>> Read()
     {
+        //defined variable to returned
         List<ToDoItem> itemsToGet;
         try
         {
+            //items set as content of return variable
             itemsToGet = items;
         }
         catch (Exception ex)
         {
+            //Error handled using Exception
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
         }
 
@@ -59,6 +67,7 @@ public class ToDoItemsController : ControllerBase
         ToDoItem? itemToGet;
         try
         {
+            //I find by id the content and send to be returned
             itemToGet = items.Find(i => i.ToDoItemId == toDoItemId);
         }
         catch (Exception ex)
@@ -87,7 +96,9 @@ public class ToDoItemsController : ControllerBase
             {
                 return NotFound(); //404
             }
+            //set id of new object to given id
             updatedItem.ToDoItemId = toDoItemId;
+            //replace selected content by the changed one
             items[itemIndexToUpdate] = updatedItem;
         }
         catch (Exception ex)
@@ -105,11 +116,13 @@ public class ToDoItemsController : ControllerBase
         //try to delete the item
         try
         {
+            //I find the item
             var itemToDelete = items.Find(i => i.ToDoItemId == toDoItemId);
             if (itemToDelete is null)
             {
                 return NotFound(); //404
             }
+            //If I find it, it is removed
             items.Remove(itemToDelete);
         }
         catch (Exception ex)
