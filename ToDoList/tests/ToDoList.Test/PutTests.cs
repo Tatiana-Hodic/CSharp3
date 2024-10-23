@@ -1,45 +1,64 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+namespace ToDoList.Test;
+
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
 using ToDoList.WebApi.Controllers;
 
-namespace ToDoList.Test
+public class PutTests
 {
-    public class PutTests
+    [Fact]
+    public void Put_ValidId_ReturnsNoContent()
     {
-        [Fact]
-        public void Put_Item_ById_ReturnsNoContent()
+        // Arrange
+        var controller = new ToDoItemsController();
+        var toDoItem = new ToDoItem
         {
-            // Arrange
-            var items = new List<ToDoItem>()
-            {
-                new() {
-                    ToDoItemId = 1,
-                    Name = "Jmeno1",
-                    Description = "Popis1",
-                    IsCompleted = false
-                },
-                new() {
-                    ToDoItemId = 2,
-                    Name = "Jmeno2",
-                    Description = "Popis2",
-                    IsCompleted = true
-                }
-            };
-            var toDoItemDto = new ToDoItemUpdateRequestDto("Jmeno", "Popis", false);
-            ToDoItemsController.items.AddRange(items);
-            var controller = new ToDoItemsController();
+            ToDoItemId = 1,
+            Name = "Jmeno",
+            Description = "Popis",
+            IsCompleted = false
+        };
+        controller.items.Add(toDoItem);
 
-            // Act
-            var result = controller.UpdateById(2, toDoItemDto);
-            var resultResult = result;
+        var request = new ToDoItemUpdateRequestDto(
+            Name: "Jine jmeno",
+            Description: "Jiny popis",
+            IsCompleted: true
+        );
 
-            // Assert
-            Assert.IsType<NoContentResult>(resultResult);
-        }
+        // Act
+        var result = controller.UpdateById(toDoItem.ToDoItemId, request);
+
+        // Assert
+        Assert.IsType<NoContentResult>(result);
+    }
+
+    [Fact]
+    public void Put_InvalidId_ReturnsNotFound()
+    {
+        // Arrange
+        var controller = new ToDoItemsController();
+        var toDoItem = new ToDoItem
+        {
+            ToDoItemId = 1,
+            Name = "Jmeno",
+            Description = "Popis",
+            IsCompleted = false
+        };
+        controller.items.Add(toDoItem);
+
+        var request = new ToDoItemUpdateRequestDto(
+            Name: "Jine jmeno",
+            Description: "Jiny popis",
+            IsCompleted: true
+        );
+
+        // Act
+        var invalidId = -1;
+        var result = controller.UpdateById(invalidId, request);
+
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
     }
 }

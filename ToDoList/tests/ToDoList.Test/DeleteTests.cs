@@ -1,43 +1,51 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+namespace ToDoList.Test;
+
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.Models;
 using ToDoList.WebApi.Controllers;
 
-namespace ToDoList.Test
+public class DeleteTests
 {
-    public class DeleteTests
+    [Fact]
+    public void Delete_ValidId_ReturnsNoContent()
     {
-        [Fact]
-        public void Delete_Item_ById_ReturnsNoContent()
+        // Arrange
+        var controller = new ToDoItemsController();
+        var toDoItem = new ToDoItem
         {
-            // Arrange
-            var items = new List<ToDoItem>()
-            {
-                new() {
-                    ToDoItemId = 1,
-                    Name = "Jmeno1",
-                    Description = "Popis1",
-                    IsCompleted = false
-                },
-                new() {
-                    ToDoItemId = 2,
-                    Name = "Jmeno2",
-                    Description = "Popis2",
-                    IsCompleted = true
-                }
-            };
-            ToDoItemsController.items.AddRange(items);
-            var controller = new ToDoItemsController();
+            ToDoItemId = 1,
+            Name = "Jmeno",
+            Description = "Popis",
+            IsCompleted = false
+        };
+        controller.items.Add(toDoItem);
 
-            // Act
-            var result = controller.DeleteById(2);
-            var resultResult = result;
+        // Act
+        var result = controller.DeleteById(toDoItem.ToDoItemId);
 
-            // Assert
-            Assert.IsType<NoContentResult>(resultResult);
-        }
+        // Assert
+        Assert.IsType<NoContentResult>(result);
+    }
+
+    [Fact]
+    public void Delete_InvalidId_ReturnsNotFound()
+    {
+        // Arrange
+        var controller = new ToDoItemsController();
+        var toDoItem = new ToDoItem
+        {
+            ToDoItemId = 1,
+            Name = "Jmeno",
+            Description = "Popis",
+            IsCompleted = false
+        };
+        controller.items.Add(toDoItem);
+
+        // Act
+        var invalidId = -1;
+        var result = controller.DeleteById(invalidId);
+
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
     }
 }

@@ -1,44 +1,33 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+namespace ToDoList.Test;
+
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
-using ToDoList.Domain.Models;
 using ToDoList.WebApi.Controllers;
 
-namespace ToDoList.Test
+public class PostTests
 {
-    public class PostTests
+    [Fact]
+    public void Post_ValidRequest_ReturnsNewItem()
     {
-        [Fact]
-        public void Post_Item_ReturnsItem()
-        {
-            // Arrange
-            var toDoItem = new ToDoItem
-            {
-                ToDoItemId = 1,
-                Name = "Jmeno",
-                Description = "Popis",
-                IsCompleted = false
-            };
-            var toDoItemDto = new ToDoItemCreateRequestDto("Jmeno", "Popis", false);
-            var controller = new ToDoItemsController();
+        // Arrange
+        var controller = new ToDoItemsController();
+        var request = new ToDoItemCreateRequestDto(
+            Name: "Jmeno",
+            Description: "Popis",
+            IsCompleted: false
+        );
 
-            // Act
-            var result = controller.Create(toDoItemDto);
-            var resultResult = result.Result;
-            var value = result.GetValue();
+        // Act
+        var result = controller.Create(request);
+        var resultResult = result.Result;
+        var value = result.GetValue();
 
-            // Assert
-            Assert.IsType<CreatedAtActionResult>(resultResult);
-            Assert.NotNull(value);
+        // Assert
+        Assert.IsType<CreatedAtActionResult>(resultResult);
+        Assert.NotNull(value);
 
-            var firstItem = value;
-            Assert.Equal(toDoItem.ToDoItemId, firstItem.Id);
-            Assert.Equal(toDoItem.Description, firstItem.Description);
-            Assert.Equal(toDoItem.IsCompleted, firstItem.IsCompleted);
-            Assert.Equal(toDoItem.Name, firstItem.Name);
-        }
+        Assert.Equal(request.Description, value.Description);
+        Assert.Equal(request.IsCompleted, value.IsCompleted);
+        Assert.Equal(request.Name, value.Name);
     }
 }
