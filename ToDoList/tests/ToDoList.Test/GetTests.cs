@@ -18,6 +18,7 @@ public class GetTests
             Description = "Popis",
             IsCompleted = false
         };
+        var controller = new ToDoItemsController();
         controller.items.Add(toDoItem);
 
         // Act
