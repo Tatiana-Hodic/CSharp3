@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.Models;
 using ToDoList.WebApi.Controllers;
+using ToDoList.Persistence;
 
 public class GetTests
 {
@@ -18,7 +19,8 @@ public class GetTests
             Description = "Popis",
             IsCompleted = false
         };
-        var controller = new ToDoItemsController();
+        var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
+        var controller = new ToDoItemsController(context);
         controller.items.Add(toDoItem);
 
         // Act
@@ -41,7 +43,8 @@ public class GetTests
     public void Get_NoItems_ReturnsNotFound()
     {
         // Arrange
-        var controller = new ToDoItemsController();
+        var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
+        var controller = new ToDoItemsController(context);
 
         // Act
         var result = controller.Read();

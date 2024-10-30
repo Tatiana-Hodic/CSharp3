@@ -4,12 +4,20 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
+using ToDoList.Persistence;
 
 [ApiController]
 [Route("api/[controller]")]
 public class ToDoItemsController : ControllerBase
 {
     public readonly List<ToDoItem> items = [];
+
+    private readonly ToDoItemsContext context;
+
+    public ToDoItemsController(ToDoItemsContext context)
+    {
+        this.context = context;
+    }
 
     [HttpPost]
     public ActionResult<ToDoItemGetResponseDto> Create(ToDoItemCreateRequestDto request)
@@ -20,10 +28,12 @@ public class ToDoItemsController : ControllerBase
         //try to create an item
         try
         {
+            context.ToDoItems.Add(item);
+            context.SaveChanges();
             //setting id, usually done by database itself
-            item.ToDoItemId = items.Count == 0 ? 1 : items.Max(o => o.ToDoItemId) + 1;
+            //item.ToDoItemId = items.Count == 0 ? 1 : items.Max(o => o.ToDoItemId) + 1;
             //adding to List by method Add
-            items.Add(item);
+            //items.Add(item);
         }
         catch (Exception ex)
         {
