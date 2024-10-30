@@ -3,6 +3,7 @@ namespace ToDoList.Test;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.Models;
+using ToDoList.Persistence;
 using ToDoList.WebApi.Controllers;
 using ToDoList.Persistence;
 
@@ -12,6 +13,8 @@ public class GetTests
     public void Get_AllItems_ReturnsAllItems()
     {
         // Arrange
+        var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
+        var controller = new ToDoItemsController(context);
         var toDoItem = new ToDoItem
         {
             ToDoItemId = 1,

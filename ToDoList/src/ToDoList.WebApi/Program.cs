@@ -1,4 +1,3 @@
-using ToDoList.Domain.Models;
 using ToDoList.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
