@@ -17,37 +17,19 @@ public class ToDoItemsRepository : IRepository<ToDoItem>
         context.ToDoItems.Add(item);
         context.SaveChanges();
     }
-
-    public bool Delete(int id)
+    public IEnumerable<ToDoItem> ReadAll() => context.ToDoItems.ToList();
+    public ToDoItem? ReadById(int id) => context.ToDoItems.Find(id);
+    public void Update(ToDoItem item)
     {
-        var itemToDelete = context.ToDoItems.Find(id);
-        if (itemToDelete is null)
-        {
-            return false; //404
-        }
-
-        context.ToDoItems.Remove(itemToDelete);
+        var foundItem = context.ToDoItems.Find(item.ToDoItemId) ?? throw new ArgumentOutOfRangeException($"ToDo item with ID {item.ToDoItemId} not found.");
+        context.Entry(foundItem).CurrentValues.SetValues(item);
         context.SaveChanges();
-        return true;
     }
-    public List<ToDoItem> Read()
-    {
-        return context.ToDoItems.ToList();
-    }
-    public ToDoItem ReadById(int id)
-    {
-        return context.ToDoItems.Find(id);
-    }
-    public bool Update(ToDoItem item)
-    {
-        var itemToUpdate = context.ToDoItems.Find(item.ToDoItemId);
-        if (itemToUpdate is null)
-        {
-            return false; //404
-        }
 
-        context.Entry(itemToUpdate).CurrentValues.SetValues(item);
+    public void DeleteById(int id)
+    {
+        var item = context.ToDoItems.Find(id) ?? throw new ArgumentOutOfRangeException($"ToDo item with ID {id} not found.");
+        context.ToDoItems.Remove(item);
         context.SaveChanges();
-        return true;
     }
 }

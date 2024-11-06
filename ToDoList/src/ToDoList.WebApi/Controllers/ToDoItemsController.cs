@@ -4,7 +4,6 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
-using ToDoList.Persistence;
 using ToDoList.Persistence.Repositories;
 
 [ApiController]
@@ -13,7 +12,7 @@ public class ToDoItemsController : ControllerBase
 {
     private readonly IRepository<ToDoItem> repository;
 
-    public ToDoItemsController(ToDoItemsContext context, IRepository<ToDoItem> repository) // Az domigrujeme, zbyde nam tu jen repository :)
+    public ToDoItemsController(IRepository<ToDoItem> repository)
     {
         this.repository = repository;
     }
@@ -45,11 +44,10 @@ public class ToDoItemsController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<ToDoItemGetResponseDto>> Read()
     {
-        //defined variable to returned
-        List<ToDoItem> itemsToGet;
+        IEnumerable<ToDoItem> itemsToGet;
         try
         {
-            itemsToGet = repository.Read();
+            itemsToGet = repository.ReadAll();
         }
         catch (Exception ex)
         {
@@ -58,7 +56,7 @@ public class ToDoItemsController : ControllerBase
         }
 
         //respond to client
-        return (itemsToGet is null || itemsToGet.Count is 0)
+        return (itemsToGet is null || !itemsToGet.Any())
             ? NotFound() //404
             : Ok(itemsToGet.Select(ToDoItemGetResponseDto.FromDomain)); //200
     }
@@ -94,11 +92,13 @@ public class ToDoItemsController : ControllerBase
         try
         {
             //retrieve the item
-            var itemToUpdateResult = repository.Update(updatedItem);
-            if (itemToUpdateResult)
+            var itemToUpdate = repository.ReadById(toDoItemId);
+            if (itemToUpdate is null)
             {
                 return NotFound(); //404
             }
+
+            repository.Update(updatedItem);
         }
         catch (Exception ex)
         {
@@ -115,11 +115,13 @@ public class ToDoItemsController : ControllerBase
         //try to delete the item
         try
         {
-            var itemToDeleteResult = repository.Delete(toDoItemId);
-            if (itemToDeleteResult)
+            var itemToDelete = repository.ReadById(toDoItemId);
+            if (itemToDelete is null)
             {
                 return NotFound(); //404
             }
+
+            repository.DeleteById(toDoItemId);
         }
         catch (Exception ex)
         {
