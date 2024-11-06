@@ -11,12 +11,10 @@ using ToDoList.Persistence.Repositories;
 [Route("api/[controller]")]
 public class ToDoItemsController : ControllerBase
 {
-    private readonly ToDoItemsContext context;
     private readonly IRepository<ToDoItem> repository;
 
     public ToDoItemsController(ToDoItemsContext context, IRepository<ToDoItem> repository) // Az domigrujeme, zbyde nam tu jen repository :)
     {
-        this.context = context;
         this.repository = repository;
     }
 
@@ -51,7 +49,7 @@ public class ToDoItemsController : ControllerBase
         List<ToDoItem> itemsToGet;
         try
         {
-            itemsToGet = context.ToDoItems.ToList();
+            itemsToGet = repository.Read();
         }
         catch (Exception ex)
         {
@@ -72,7 +70,7 @@ public class ToDoItemsController : ControllerBase
         ToDoItem? itemToGet;
         try
         {
-            itemToGet = context.ToDoItems.Find(toDoItemId);
+            itemToGet = repository.ReadById(toDoItemId);
         }
         catch (Exception ex)
         {
@@ -96,14 +94,11 @@ public class ToDoItemsController : ControllerBase
         try
         {
             //retrieve the item
-            var itemToUpdate = context.ToDoItems.Find(toDoItemId);
-            if (itemToUpdate is null)
+            var itemToUpdateResult = repository.Update(updatedItem);
+            if (itemToUpdateResult)
             {
                 return NotFound(); //404
             }
-
-            context.Entry(itemToUpdate).CurrentValues.SetValues(updatedItem);
-            context.SaveChanges();
         }
         catch (Exception ex)
         {
@@ -120,14 +115,11 @@ public class ToDoItemsController : ControllerBase
         //try to delete the item
         try
         {
-            var itemToDelete = context.ToDoItems.Find(toDoItemId);
-            if (itemToDelete is null)
+            var itemToDeleteResult = repository.Delete(toDoItemId);
+            if (itemToDeleteResult)
             {
                 return NotFound(); //404
             }
-
-            context.ToDoItems.Remove(itemToDelete);
-            context.SaveChanges();
         }
         catch (Exception ex)
         {
