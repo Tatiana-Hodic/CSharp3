@@ -4,11 +4,13 @@ using ToDoList.Domain.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 {
-    //Configure DI
-    builder.Services.AddControllers();
+    //WebApi services
+    builder.Services.AddControllers(); // pridalo ToDoItemsController
     builder.Services.AddSwaggerGen();
-    builder.Services.AddDbContext<ToDoItemsContext>();
-    builder.Services.AddScoped<IRepository<ToDoItem>, ToDoItemsRepository>();
+
+    //Persistence services
+    builder.Services.AddDbContext<ToDoItemsContext>(); // pridalo ToDoItemsContext
+    builder.Services.AddScoped<IRepository<ToDoItem>, ToDoItemsRepository>(); // pridalo ToDoItemsRepository
 }
 
 var app = builder.Build();
