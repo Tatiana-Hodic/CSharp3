@@ -1,21 +1,19 @@
-﻿namespace ToDoList.Persistence;
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ToDoList.Domain.Models;
 
-public class ToDoItemsContext : DbContext
+namespace ToDoList.Persistence
 {
-    private readonly string connectionString;
-    public ToDoItemsContext(string connectionString = "Data Source=../../data/localdb.db")
+    public class ToDoItemsContext : DbContext
     {
-        this.connectionString = connectionString;
-        this.Database.Migrate();
-    }
+        DbSet<ToDoItem> ToDoItems { get; set; }
 
-    public DbSet<ToDoItem> ToDoItems { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlite(connectionString);
+        public ToDoItemsContext(DbContextOptions<ToDoItemsContext> options)
+        {
+            
+        }
     }
 }

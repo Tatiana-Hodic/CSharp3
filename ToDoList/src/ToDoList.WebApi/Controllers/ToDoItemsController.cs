@@ -131,4 +131,6 @@ public class ToDoItemsController : ControllerBase
         //respond to client
         return NoContent(); //204
     }
+
+    public object DeleteById() => throw new NotImplementedException();
 }
